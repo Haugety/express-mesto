@@ -1,12 +1,12 @@
 const router = require('express').Router();
 const { getCards } = require('../controllers/cards');
-const { resourceNotFound } = require('../helpers/status-handlers');
+const { notFound } = require('../helpers/status-handlers');
 
 router.use(
   '/cards/:char',
   (req, res) => {
-    resourceNotFound(res);
-  }
+    notFound(res);
+  },
 );
 
 router.use(

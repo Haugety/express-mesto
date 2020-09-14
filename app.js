@@ -4,7 +4,7 @@ const app = express();
 const path = require('path');
 const { userRouter } = require('./routes/users');
 const { cardRouter } = require('./routes/cards');
-const { resourceNotFound } = require('./helpers/status-handlers');
+const { notFound } = require('./helpers/status-handlers');
 
 app.use(
   express.static(
@@ -16,7 +16,7 @@ app.use(userRouter);
 app.use(cardRouter);
 
 app.all('*', (req, res) => {
-  resourceNotFound(res);
+  notFound(res);
 });
 
 const { PORT = 3000 } = process.env;

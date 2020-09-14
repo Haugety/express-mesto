@@ -1,15 +1,16 @@
 const path = require('path');
 const { getJsonFromFile } = require('../helpers/read-file');
-const { internalServerError, httpOk } = require('../helpers/status-handlers');
+const { notFound, httpOk } = require('../helpers/status-handlers');
 
 const getCards = (req, res) => getJsonFromFile(path.join(__dirname, '..', 'data', 'cards.json'))
   .then((data) => {
     if (!data) {
-      internalServerError(res);
+      notFound(res, 'Запрашиваемые данные отсутствуют');
       return;
     }
     httpOk(res, data);
-  });
+  })
+  .catch((err) => console.log(err));
 
 module.exports = {
   getCards,

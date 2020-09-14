@@ -8,23 +8,16 @@ const httpOk = (res, data) => {
   res
     .status(200)
     .send(data);
-}
+};
 
-const userNotFound = (res) => {
+const notFound = (res, error = 'Запрашиваемый ресурс не найден') => {
   res
     .status(404)
-    .send({ message: 'Нет пользователя с таким id' });
-}
-
-const resourceNotFound = (res) => {
-  res
-    .status(404)
-    .send({ message: 'Запрашиваемый ресурс не найден' });
-}
+    .send({ message: error });
+};
 
 module.exports = {
   internalServerError,
   httpOk,
-  userNotFound,
-  resourceNotFound,
-}
+  notFound,
+};

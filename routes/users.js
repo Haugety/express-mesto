@@ -1,12 +1,12 @@
 const router = require('express').Router();
 const { getUsers, getUserById } = require('../controllers/users');
-const { resourceNotFound } = require('../helpers/status-handlers');
+const { notFound } = require('../helpers/status-handlers');
 
 router.use(
   '/users/:_id/:char',
   (req, res) => {
-    resourceNotFound(res);
-  }
+    notFound(res);
+  },
 );
 
 router.use(
