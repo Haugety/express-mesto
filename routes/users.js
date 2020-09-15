@@ -2,19 +2,19 @@ const router = require('express').Router();
 const { getUsers, getUserById } = require('../controllers/users');
 const { notFound } = require('../helpers/status-handlers');
 
-router.use(
+router.get(
   '/users/:_id/:char',
   (req, res) => {
     notFound(res);
   },
 );
 
-router.use(
+router.get(
   '/users/:_id',
   getUserById,
 );
 
-router.use(
+router.get(
   '/users',
   getUsers,
 );
