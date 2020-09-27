@@ -1,7 +1,7 @@
 const internalServerError = (res) => {
   res
     .status(500)
-    .send('Internal Server Error');
+    .send({ message: 'Internal Server Error' });
 };
 
 const httpOk = (res, data) => {
@@ -16,8 +16,15 @@ const notFound = (res, error = 'Запрашиваемый ресурс не н�
     .send({ message: error });
 };
 
+const badRequest = (res) => {
+  res
+    .status(400)
+    .send({ message: 'Bad Request' });
+};
+
 module.exports = {
   internalServerError,
   httpOk,
   notFound,
+  badRequest,
 };
