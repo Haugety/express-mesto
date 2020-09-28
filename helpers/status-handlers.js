@@ -19,7 +19,7 @@ const notFound = (res, error = 'Запрашиваемый ресурс не н�
 const badRequest = (res) => {
   res
     .status(400)
-    .send({ message: 'Bad Request' });
+    .send({ message: 'Переданы некорректные данные' });
 };
 
 module.exports = {

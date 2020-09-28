@@ -1,5 +1,5 @@
 const regExp = {
-  url: /^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/gm,
+  url: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/gm,
 };
 
 module.exports = regExp;

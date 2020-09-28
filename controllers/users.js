@@ -17,33 +17,59 @@ const getUsers = (req, res) => User.find({})
   .catch(() => internalServerError(res));
 
 const getUserById = (req, res) => User.findOne({ _id: req.params._id })
-  .then((user) => {
-    if (!user) {
-      notFound(res, 'Нет пользователя с таким id');
-      return;
+  .orFail(new Error('NotValidId'))
+  .then((user) => httpOk(res, user))
+  .catch((err) => {
+    if (err.name === 'CastError' || err.message === 'NotValidId') {
+      notFound(res, 'Данного пользователя нет в базе');
+    } else {
+      internalServerError(res);
     }
-
-    httpOk(res, user);
-  })
-  .catch(() => internalServerError(res));
+  });
 
 const createUser = (req, res) => User.create(req.body)
   .then((user) => httpOk(res, user))
-  .catch(() => badRequest(res));
+  .catch((err) => {
+    if (err.name === 'ValidationError') {
+      badRequest(res);
+    } else {
+      internalServerError(res);
+    }
+  });
 
 const updateUser = (req, res) => User.findByIdAndUpdate(
   req.user._id,
   { name: req.body.name, about: req.body.about },
+  { new: true, runValidators: true },
 )
+  .orFail(new Error('NotValidId'))
   .then((user) => httpOk(res, user))
-  .catch(() => badRequest(res));
+  .catch((err) => {
+    if (err.name === 'CastError' || err.message === 'NotValidId') {
+      notFound(res, 'Данного пользователя нет в базе');
+    } else if (err.name === 'ValidationError') {
+      badRequest(res);
+    } else {
+      internalServerError(res);
+    }
+  });
 
 const updateAvatar = (req, res) => User.findByIdAndUpdate(
   req.user._id,
   { avatar: req.body.avatar },
+  { new: true, runValidators: true },
 )
+  .orFail(new Error('NotValidId'))
   .then((user) => httpOk(res, user))
-  .catch(() => badRequest(res));
+  .catch((err) => {
+    if (err.name === 'CastError' || err.message === 'NotValidId') {
+      notFound(res, 'Данного пользователя нет в базе');
+    } else if (err.name === 'ValidationError') {
+      badRequest(res);
+    } else {
+      internalServerError(res);
+    }
+  });
 
 module.exports = {
   getUsers,
