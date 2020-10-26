@@ -1,3 +1,7 @@
+const { NODE_ENV, JWT_SECRET } = process.env;
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 const User = require('../models/user');
 const {
   internalServerError,
@@ -5,6 +9,25 @@ const {
   notFound,
   badRequest,
 } = require('../helpers/status-handlers');
+
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        { expiresIn: '7d' },
+      );
+      res.send({ token });
+    })
+    .catch((err) => {
+      res
+        .status(401)
+        .send({ message: err.message });
+    });
+};
 
 const getUsers = (req, res) => User.find({})
   .then((data) => {
@@ -27,15 +50,24 @@ const getUserById = (req, res) => User.findOne({ _id: req.params._id })
     }
   });
 
-const createUser = (req, res) => User.create(req.body)
-  .then((user) => httpOk(res, user))
-  .catch((err) => {
-    if (err.name === 'ValidationError') {
-      badRequest(res);
-    } else {
-      internalServerError(res);
-    }
-  });
+const createUser = (req, res) => {
+  bcrypt.hash(req.body.password, 10)
+    .then((hash) => User.create({
+      email: req.body.email,
+      password: hash,
+      name: req.body.name,
+      about: req.body.about,
+      avatar: req.body.avatar,
+    }))
+    .then(() => httpOk(res, { message: 'Вы успешно зарегистрировались!' }))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        badRequest(res);
+      } else {
+        internalServerError(res);
+      }
+    });
+};
 
 const updateUser = (req, res) => User.findByIdAndUpdate(
   req.user._id,
@@ -74,6 +106,7 @@ const updateAvatar = (req, res) => User.findByIdAndUpdate(
 module.exports = {
   getUsers,
   getUserById,
+  login,
   createUser,
   updateUser,
   updateAvatar,
