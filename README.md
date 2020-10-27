@@ -1,6 +1,11 @@
 # Проект Mesto (backend)
 
-## Запуск проекта
+**Публичный IP:** 84.201.151.38
 
-`npm run start` — запускает сервер
-`npm run dev` — запускает сервер с hot-reload
+**Домен backend:** api.hgs.students.nomoreparties.space
+
+**Домен frontend:** hgs.students.nomoreparties.space
+**Репозиторий frontend:** https://github.com/Haugety/react-mesto-auth
+
+
+
